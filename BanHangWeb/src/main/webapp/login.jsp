@@ -1,151 +1,76 @@
-<%-- 
-    Document   : login
-    Created on : Oct 9, 2025, 11:31:17 PM
-    Author     : Nguyễn Huy Thông
---%>
-
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<html>
+<!DOCTYPE html>
+<html lang="vi">
 <head>
-    <title>Đăng nhập - NHT Shop</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập - Vibrant Shop</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        * {
-            box-sizing: border-box;
-            font-family: "Segoe UI", Arial, sans-serif;
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+        :root {
+            --primary-color: #0077b6; --secondary-color: #00b4d8; --success-color: #2a9d8f;
+            --danger-color: #e76f51; --text-color: #264653; --card-bg-color: rgba(255, 255, 255, 0.9);
+            --border-radius: 12px; --box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
-
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            background: linear-gradient(135deg, #007bff, #00b4d8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            color: #333;
+            font-family: 'Poppins', sans-serif; color: var(--text-color); line-height: 1.6;
+            background: linear-gradient(135deg, #caf0f8, #ade8f4);
+            display: flex; justify-content: center; align-items: center; min-height: 100vh;
         }
-
-        .container {
-            width: 380px;
-            background: #fff;
-            padding: 35px 40px;
-            border-radius: 15px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-            animation: fadeIn 0.6s ease-in-out;
+        .auth-container { animation: fadeIn 0.7s ease-in-out; }
+        .auth-card {
+            background: var(--card-bg-color); backdrop-filter: blur(10px);
+            padding: 40px; border-radius: var(--border-radius); box-shadow: var(--box-shadow);
+            width: 100%; max-width: 420px; text-align: center; border: 1px solid rgba(255, 255, 255, 0.2);
         }
-
-        h2 {
-            text-align: center;
-            color: #007bff;
-            margin-bottom: 25px;
-            font-size: 26px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
+        .auth-card h2 { color: var(--primary-color); margin-bottom: 25px; font-weight: 700; }
+        .form-group { margin-bottom: 20px; text-align: left; position: relative; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 500; }
+        .form-control {
+            width: 100%; padding: 12px 15px 12px 40px; border: 1px solid #ccc;
+            border-radius: var(--border-radius); font-size: 16px; transition: all 0.3s ease;
         }
-
-        label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: 600;
-            color: #333;
-            font-size: 14px;
+        .form-control:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(0, 119, 182, 0.2); }
+        .form-group i { position: absolute; left: 15px; top: 42px; color: #aaa; }
+        .btn {
+            display: inline-block; padding: 12px 25px; border: none; border-radius: var(--border-radius);
+            color: #fff; cursor: pointer; font-size: 16px; font-weight: 600; text-decoration: none;
+            transition: all 0.3s ease; background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            width: 100%; box-shadow: 0 4px 15px rgba(0, 119, 182, 0.3);
         }
-
-        input[type=text],
-        input[type=password] {
-            width: 100%;
-            padding: 11px 12px;
-            margin-bottom: 18px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            transition: 0.3s;
-            font-size: 15px;
-        }
-
-        input[type=text]:focus,
-        input[type=password]:focus {
-            border-color: #007bff;
-            box-shadow: 0 0 5px rgba(0,123,255,0.3);
-            outline: none;
-        }
-
-        input[type=submit] {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, #007bff, #0056b3);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 15px;
-            transition: all 0.3s ease;
-        }
-
-        input[type=submit]:hover {
-            background: linear-gradient(135deg, #0056b3, #004099);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-        }
-
-        .note {
-            text-align: center;
-            margin-top: 20px;
-            color: #555;
-            font-size: 14px;
-        }
-
-        .note a {
-            color: #007bff;
-            text-decoration: none;
-            font-weight: 600;
-            transition: 0.3s;
-        }
-
-        .note a:hover {
-            color: #0056b3;
-            text-decoration: underline;
-        }
-
-        .error {
-            background: #ffe6e6;
-            border: 1px solid #ffb3b3;
-            color: #d90429;
-            padding: 10px;
-            border-radius: 8px;
-            text-align: center;
-            margin-bottom: 15px;
-            font-weight: 500;
-        }
-
-        /* Hiệu ứng xuất hiện nhẹ */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0, 119, 182, 0.4); }
+        .auth-card .note { margin-top: 20px; }
+        .auth-card .note a { color: var(--primary-color); font-weight: 600; text-decoration: none; }
+        .error-message { background-color: #f8d7da; color: #721c24; padding: 10px; border: 1px solid #f5c6cb; border-radius: var(--border-radius); margin-bottom: 20px; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Đăng nhập</h2>
-        <form action="login" method="post">
+    <div class="auth-container">
+        <div class="auth-card">
+            <h2>Chào mừng trở lại!</h2>
             <c:if test="${not empty msg}">
-                <div class="error">${msg}</div>
+                <div class="error-message">${msg}</div>
             </c:if>
-
-            <label>Tài khoản:</label>
-            <input type="text" name="username" placeholder="Nhập tên đăng nhập" required />
-
-            <label>Mật khẩu:</label>
-            <input type="password" name="password" placeholder="Nhập mật khẩu" required />
-
-            <input type="submit" value="Đăng nhập" />
-        </form>
-
-        <div class="note">
-            <p>Chưa có tài khoản?
-                <a href="${pageContext.request.contextPath}/register">Đăng ký ngay</a>
-            </p>
+            <form action="login" method="post">
+                <div class="form-group">
+                    <label for="username">Tài khoản</label>
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" id="username" name="username" class="form-control" placeholder="Nhập tên đăng nhập" required />
+                </div>
+                <div class="form-group">
+                    <label for="password">Mật khẩu</label>
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" id="password" name="password" class="form-control" placeholder="Nhập mật khẩu" required />
+                </div>
+                <button type="submit" class="btn">Đăng nhập</button>
+            </form>
+            <div class="note">
+                <p>Chưa có tài khoản? <a href="${pageContext.request.contextPath}/register">Đăng ký ngay</a></p>
+            </div>
         </div>
     </div>
 </body>

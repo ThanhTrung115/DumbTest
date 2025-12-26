@@ -1,135 +1,69 @@
-<%-- 
-    Document   : sanpham-form
-    Created on : Oct 10, 2025, 12:19:04 AM
-    Author     : ASUS
---%>
-
 <%@ page contentType="text/html; charset=UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <title>${empty sp ? 'Thêm' : 'Sửa'} Sản phẩm</title>
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        body {
-            font-family: "Segoe UI", Arial, sans-serif;
-            background: linear-gradient(135deg, #e3f2fd, #f8f9fa);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+        :root {
+            --primary-color: #0077b6; --sidebar-bg: #1d3557; --admin-bg: #f1faee; --text-color: #1d3557;
+            --card-bg-color: #ffffff; --danger-color: #e63946; --border-radius: 12px;
+            --box-shadow: 0 8px 20px rgba(0, 0, 0, 0.07);
         }
-
-        .form-container {
-            background: #fff;
-            padding: 30px 40px;
-            border-radius: 16px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-            width: 440px;
-        }
-
-        h2 {
-            text-align: center;
-            color: #1976d2;
-            margin-bottom: 25px;
-            font-size: 22px;
-        }
-
-        label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 6px;
-            color: #333;
-        }
-
-        input {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            font-size: 15px;
-            margin-bottom: 18px;
-            transition: border-color 0.3s;
-        }
-
-        input:focus {
-            border-color: #1976d2;
-            outline: none;
-        }
-
-        .btn-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        button {
-            background: #1976d2;
-            color: white;
-            border: none;
-            padding: 10px 18px;
-            border-radius: 8px;
-            font-size: 15px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        button:hover {
-            background: #0d47a1;
-        }
-
-        a {
-            text-decoration: none;
-            color: #1976d2;
-            font-weight: 500;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
-        .footer-note {
-            text-align: center;
-            font-size: 13px;
-            color: #777;
-            margin-top: 15px;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Poppins', sans-serif; background-color: var(--admin-bg); color: var(--text-color); }
+        .admin-wrapper { display: flex; }
+        .admin-sidebar { width: 260px; background: var(--sidebar-bg); color: #fff; min-height: 100vh; padding: 20px; position: fixed; }
+        .admin-sidebar h2 { text-align: center; margin-bottom: 40px; color: #fff; font-weight: 600; }
+        .admin-sidebar ul { list-style: none; }
+        .admin-sidebar ul li a { display: flex; align-items: center; gap: 15px; color: #f1faee; padding: 15px; border-radius: var(--border-radius); margin-bottom: 10px; transition: all 0.3s; text-decoration: none;}
+        .admin-sidebar ul li a:hover, .admin-sidebar ul li a.active { background-color: #457b9d; transform: translateX(5px); }
+        .admin-sidebar ul li a i { font-size: 1.2rem; width: 20px; text-align: center; }
+        .admin-content { flex-grow: 1; padding: 40px; margin-left: 260px; }
+        .content-card { background: var(--card-bg-color); padding: 30px; border-radius: var(--border-radius); box-shadow: var(--box-shadow); animation: popIn 0.5s ease-out;}
+        .content-card h2 { font-weight: 600; font-size: 1.8rem; margin-bottom: 25px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 500; }
+        .form-control { width: 100%; padding: 12px 15px; border: 1px solid #ccc; border-radius: var(--border-radius); font-size: 15px; transition: all 0.3s ease; }
+        .form-control:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(0, 119, 182, 0.2); }
+        .btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border: none; border-radius: var(--border-radius); color: #fff; cursor: pointer; font-size: 15px; font-weight: 500; text-decoration: none; transition: all 0.3s ease; margin-right: 10px; }
+        .btn-primary { background: var(--primary-color); box-shadow: 0 4px 15px rgba(0, 119, 182, 0.2); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 119, 182, 0.3); }
+        .btn-cancel { background: #6c757d; }
+        @keyframes popIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
-
-<div class="form-container">
-    <h2>${empty sp ? 'Thêm' : 'Sửa'} Sản phẩm</h2>
-    <form method="post" action="${pageContext.request.contextPath}/admin/sanpham">
-        <input type="hidden" name="MaSP" value="${sp.maSP}"/>
-
-        <label>Tên sản phẩm:</label>
-        <input name="TenSP" value="${sp.tenSP}" required/>
-
-        <label>Giá (VNĐ):</label>
-        <input name="Gia" type="number" step="0.01" value="${sp.gia}" required/>
-
-        <label>Số lượng:</label>
-        <input name="SoLuong" type="number" value="${sp.soLuong}" required/>
-
-        <label>Ảnh sản phẩm (URL hoặc tên file):</label>
-        <input name="HinhAnh" value="${sp.hinhAnh}"/>
-
-        <label>Mô tả sản phẩm:</label>
-        <input name="MotaSP" value="${sp.motaSP}"/>
-
-        <label>Mã danh mục:</label>
-        <input name="MaDMSP" type="number" value="${sp.maDMSP}" required/>
-
-        <div class="btn-container">
-            <button type="submit">💾 Lưu</button>
-            <a href="${pageContext.request.contextPath}/admin/sanpham">← Quay lại</a>
-        </div>
-    </form>
-    <div class="footer-note">Trang quản trị sản phẩm • 2025</div>
-</div>
-
+    <div class="admin-wrapper">
+        <aside class="admin-sidebar">
+            <h2><i class="fa-solid fa-shield-halved"></i> Admin Panel</h2>
+            <ul>
+                <li><a href="${pageContext.request.contextPath}/admin/user"><i class="fa-solid fa-users"></i> Quản lý Khách hàng</a></li>
+                <li><a href="${pageContext.request.contextPath}/admin/sanpham" class="active"><i class="fa-solid fa-box-open"></i> Quản lý Sản phẩm</a></li>
+                <li><a href="${pageContext.request.contextPath}/admin/hoadon"><i class="fa-solid fa-file-invoice-dollar"></i> Quản lý Hóa đơn</a></li>
+                <li><a href="${pageContext.request.contextPath}/home"><i class="fa-solid fa-store"></i> Về trang chủ</a></li>
+                <li><a href="${pageContext.request.contextPath}/logout"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</a></li>
+            </ul>
+        </aside>
+        <main class="admin-content">
+            <div class="content-card">
+                 <h2>${empty sp ? 'Thêm mới Sản phẩm' : 'Cập nhật Sản phẩm'}</h2>
+                 <form method="post" action="${pageContext.request.contextPath}/admin/sanpham">
+                    <input type="hidden" name="MaSP" value="${sp.maSP}"/>
+                    <div class="form-group"><label>Tên sản phẩm:</label><input class="form-control" name="TenSP" value="${sp.tenSP}" required/></div>
+                    <div class="form-group"><label>Giá (VNĐ):</label><input class="form-control" name="Gia" type="number" step="1000" value="${sp.gia}" required/></div>
+                    <div class="form-group"><label>Số lượng:</label><input class="form-control" name="SoLuong" type="number" value="${sp.soLuong}" required/></div>
+                    <div class="form-group"><label>Ảnh sản phẩm (URL):</label><input class="form-control" name="HinhAnh" value="${sp.hinhAnh}"/></div>
+                    <div class="form-group"><label>Mô tả:</label><input class="form-control" name="MotaSP" value="${sp.motaSP}"/></div>
+                    <div class="form-group"><label>Mã danh mục:</label><input class="form-control" name="MaDMSP" type="number" value="${sp.maDMSP}" required/></div>
+                    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Lưu lại</button>
+                    <a href="${pageContext.request.contextPath}/admin/sanpham" class="btn btn-cancel"><i class="fa-solid fa-xmark"></i> Hủy</a>
+                 </form>
+            </div>
+        </main>
+    </div>
 </body>
 </html>

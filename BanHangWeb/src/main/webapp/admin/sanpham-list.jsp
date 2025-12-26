@@ -5,133 +5,77 @@
 <head>
     <meta charset="UTF-8">
     <title>Quản lý Sản phẩm</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: linear-gradient(135deg, #e3f2fd, #ffffff);
-            margin: 0;
-            padding: 40px;
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+        :root {
+            --primary-color: #0077b6; --sidebar-bg: #1d3557; --admin-bg: #f1faee; --text-color: #1d3557;
+            --card-bg-color: #ffffff; --danger-color: #e63946; --warning-color: #fca311;
+            --light-gray: #e9ecef; --border-radius: 12px; --box-shadow: 0 8px 20px rgba(0, 0, 0, 0.07);
         }
-
-        .container {
-            max-width: 1000px;
-            background: #fff;
-            margin: 0 auto;
-            padding: 25px 35px;
-            border-radius: 15px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-
-        h2 {
-            text-align: center;
-            color: #0d47a1;
-            margin-bottom: 20px;
-            font-size: 26px;
-        }
-
-        form.filter-form {
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        input[type="text"], select {
-            padding: 8px 10px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 14px;
-        }
-
-        button {
-            padding: 8px 14px;
-            border: none;
-            border-radius: 6px;
-            background-color: #1976d2;
-            color: white;
-            cursor: pointer;
-        }
-
-        .btn-add {
-            display: inline-block;
-            background-color: #2196f3;
-            color: #fff;
-            padding: 10px 16px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-weight: 500;
-            transition: 0.3s;
-        }
-
-        .btn-add:hover { background-color: #1976d2; }
-
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; border-radius: 10px; overflow: hidden; }
-        th { background-color: #1976d2; color: white; padding: 12px 10px; text-transform: uppercase; font-size: 14px; }
-        td { border-bottom: 1px solid #ddd; padding: 10px; text-align: center; color: #333; }
-        tr:nth-child(even) { background-color: #f9f9f9; }
-        tr:hover { background-color: #e3f2fd; transition: 0.3s; }
-
-        a.action-link { text-decoration: none; padding: 6px 12px; border-radius: 6px; color: white; font-size: 13px; font-weight: 500; transition: 0.3s; }
-        a.edit { background-color: #4caf50; }
-        a.edit:hover { background-color: #43a047; }
-        a.delete { background-color: #f44336; }
-        a.delete:hover { background-color: #d32f2f; }
-
-        .no-data { text-align: center; padding: 20px; color: #777; font-style: italic; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Poppins', sans-serif; background-color: var(--admin-bg); color: var(--text-color); }
+        .admin-wrapper { display: flex; }
+        .admin-sidebar { width: 260px; background: var(--sidebar-bg); color: #fff; min-height: 100vh; padding: 20px; position: fixed; }
+        .admin-sidebar h2 { text-align: center; margin-bottom: 40px; color: #fff; font-weight: 600; }
+        .admin-sidebar ul { list-style: none; }
+        .admin-sidebar ul li a { display: flex; align-items: center; gap: 15px; color: #f1faee; padding: 15px; border-radius: var(--border-radius); margin-bottom: 10px; transition: all 0.3s; text-decoration: none;}
+        .admin-sidebar ul li a:hover, .admin-sidebar ul li a.active { background-color: #457b9d; transform: translateX(5px); }
+        .admin-sidebar ul li a i { font-size: 1.2rem; width: 20px; text-align: center; }
+        .admin-content { flex-grow: 1; padding: 40px; margin-left: 260px; }
+        .content-card { background: var(--card-bg-color); padding: 30px; border-radius: var(--border-radius); box-shadow: var(--box-shadow); animation: popIn 0.5s ease-out;}
+        .content-card .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .content-card .header h2 { font-weight: 600; font-size: 1.8rem; }
+        .btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border: none; border-radius: var(--border-radius); color: #fff; cursor: pointer; font-size: 15px; font-weight: 500; text-decoration: none; transition: all 0.3s ease; }
+        .btn-primary { background: var(--primary-color); box-shadow: 0 4px 15px rgba(0, 119, 182, 0.2); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 119, 182, 0.3); }
+        .styled-table { width: 100%; border-collapse: collapse; }
+        .styled-table th, .styled-table td { padding: 15px; text-align: left; border-bottom: 1px solid var(--light-gray); }
+        .styled-table thead { background-color: #f8f9fa; color: var(--text-color); }
+        .styled-table tbody tr { transition: background-color 0.3s; }
+        .styled-table tbody tr:hover { background-color: #f1f7fe; }
+        .action-links a { margin-right: 15px; font-weight: 500; text-decoration: none; font-size: 1.1rem; transition: transform 0.2s; display: inline-block; }
+        .action-links a:hover { transform: scale(1.2); }
+        a.edit { color: var(--warning-color); }
+        a.delete { color: var(--danger-color); }
+        @keyframes popIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
-<div class="container">
-    <h2>📦 Quản lý Sản phẩm</h2>
-
-    <form class="filter-form" method="get" action="${pageContext.request.contextPath}/admin/sanpham">
-        <input type="text" name="keyword" value="${param.keyword}" placeholder="🔍 Tìm theo tên sản phẩm...">
-        <select name="madm">
-            <option value="">-- Tất cả danh mục --</option>
-            <option value="1" ${param.madm == '1' ? 'selected' : ''}>Danh mục 1</option>
-            <option value="2" ${param.madm == '2' ? 'selected' : ''}>Danh mục 2</option>
-            <option value="3" ${param.madm == '3' ? 'selected' : ''}>Danh mục 3</option>
-        </select>
-        <button type="submit">Lọc </button>
-    </form>
-
-    <p>
-        <a href="${pageContext.request.contextPath}/admin/sanpham?action=new" class="btn-add">➕ Thêm mới</a>
-    </p>
-
-    <table>
-        <tr>
-            <th>Mã SP</th>
-            <th>Tên sản phẩm</th>
-            <th>Giá</th>
-            <th>Số lượng</th>
-            <th>Mã danh mục</th>
-            <th>Hành động</th>
-        </tr>
-
-        <c:choose>
-            <c:when test="${empty list}">
-                <tr><td colspan="6" class="no-data">Không có sản phẩm nào</td></tr>
-            </c:when>
-            <c:otherwise>
-                <c:forEach var="sp" items="${list}">
-                    <tr>
-                        <td>${sp.maSP}</td>
-                        <td>${sp.tenSP}</td>
-                        <td>${sp.gia}</td>
-                        <td>${sp.soLuong}</td>
-                        <td>${sp.maDMSP}</td>
-                        <td>
-                            <a href="${pageContext.request.contextPath}/admin/sanpham?action=edit&MaSP=${sp.maSP}" class="action-link edit">Sửa</a>
-                            <a href="${pageContext.request.contextPath}/admin/sanpham?action=delete&MaSP=${sp.maSP}"
-                               class="action-link delete"
-                               onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này?')">Xóa</a>
-                        </td>
-                    </tr>
-                </c:forEach>
-            </c:otherwise>
-        </c:choose>
-    </table>
-</div>
+    <div class="admin-wrapper">
+        <aside class="admin-sidebar">
+            <h2><i class="fa-solid fa-shield-halved"></i> Admin Panel</h2>
+            <ul>
+                <li><a href="${pageContext.request.contextPath}/admin/user"><i class="fa-solid fa-users"></i> Quản lý Khách hàng</a></li>
+                <li><a href="${pageContext.request.contextPath}/admin/sanpham" class="active"><i class="fa-solid fa-box-open"></i> Quản lý Sản phẩm</a></li>
+                <li><a href="${pageContext.request.contextPath}/admin/hoadon"><i class="fa-solid fa-file-invoice-dollar"></i> Quản lý Hóa đơn</a></li>
+                <li><a href="${pageContext.request.contextPath}/home"><i class="fa-solid fa-store"></i> Về trang chủ</a></li>
+                <li><a href="${pageContext.request.contextPath}/logout"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</a></li>
+            </ul>
+        </aside>
+        <main class="admin-content">
+            <div class="content-card">
+                <div class="header">
+                    <h2>Danh sách Sản phẩm</h2>
+                    <a href="${pageContext.request.contextPath}/admin/sanpham?action=new" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Thêm mới</a>
+                </div>
+                <table class="styled-table">
+                    <thead><tr><th>Mã SP</th><th>Tên sản phẩm</th><th>Giá</th><th>Số lượng</th><th>Hành động</th></tr></thead>
+                    <tbody>
+                        <c:forEach var="sp" items="${list}">
+                            <tr>
+                                <td>${sp.maSP}</td><td>${sp.tenSP}</td>
+                                <td>${String.format("%,.0f", sp.gia)} ₫</td><td>${sp.soLuong}</td>
+                                <td class="action-links">
+                                    <a href="${pageContext.request.contextPath}/admin/sanpham?action=edit&MaSP=${sp.maSP}" class="edit"><i class="fa-solid fa-pen-to-square"></i></a>
+                                    <a href="${pageContext.request.contextPath}/admin/sanpham?action=delete&MaSP=${sp.maSP}" class="delete" onclick="return confirm('Bạn chắc chắn muốn xóa?')"><i class="fa-solid fa-trash-can"></i></a>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
 </body>
 </html>

@@ -1,7 +1,7 @@
 <%-- 
     Document   : index
     Created on : Oct 9, 2025, 11:30:59 PM
-    Author     : Nguyễn Huy Thông
+    Author     : Bùi Thành Trung
 --%>
 
 <%@ page contentType="text/html; charset=UTF-8" %>
@@ -144,7 +144,7 @@
                 Xin chào, <b>${sessionScope.currentUser.hoVaTen}</b> 👋
             </c:when>
             <c:otherwise>
-                Chào mừng đến với <b>Nguyen Duy </b> 🛍️
+                Chào mừng đến với <b>Thành Trung </b> 🛍️
             </c:otherwise>
         </c:choose>
     </div>
@@ -181,7 +181,7 @@
 
 <!-- Footer -->
 <div class="footer">
-    © 2025 - <span>Hệ thống bán hàng </span> | Thiết kế bởi Nguyễn Gia Duy 💙
+    © 2025 - <span>Hệ thống bán hàng </span> | Thiết kế bởi Bùi Thành Trung 💙
 </div>
 
 </body>
